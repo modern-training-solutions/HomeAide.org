@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Our data · HomeAide.org</title>
+  <meta name="description" content="HomeAide.org helps families find Medicare-certified home health agencies using public CMS quality data.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+  
+</head>
+<body data-page="data">
+  <div id="site-header"></div>
+  
+<article class="article"><div class="article-inner">
+  <p class="kicker">Methodology</p>
+  <h1>Where the agency list comes from</h1>
+  <p>The directory is the CMS Provider Data Catalog dataset <strong>Home Health Care Agencies</strong> (identifier <code>6jpm-sxkc</code>), July 2026 release. CMS describes it as a list of all home health agencies registered with Medicare, including addresses, phone numbers, and quality measure ratings.</p>
+  <ul>
+    <li>Source: <a href="https://data.cms.gov/provider-data/dataset/6jpm-sxkc">data.cms.gov/provider-data/dataset/6jpm-sxkc</a></li>
+    <li>Topic page: <a href="https://data.cms.gov/provider-data/topics/home-health-services">Home health services</a></li>
+    <li>Last modified in source metadata: May 27, 2026 · released July 15, 2026 · planned update October 21, 2026</li>
+    <li>Local copy: <code>data/HH_Provider_Jul2026.csv</code> (12,460 agencies, 96 columns)</li>
+  </ul>
+  <h2>What we display</h2>
+  <p>Name, CMS Certification Number, address, phone, ownership, certification date, six service flags (nursing, PT, OT, speech, medical social work, home health aide), quality-of-patient-care star rating, selected process/outcome percentages, national-rate comparison categories, and Medicare spending relative to the national average.</p>
+  <h2>What we do not display yet</h2>
+  <p>HHCAHPS patient-survey detail, zip-code service-area files, websites, hours, languages, waitlists, and staff bios. Those are the enrichment tasks described in the project README for the business manager.</p>
+  <h2>Refresh cadence</h2>
+  <p>Replace the CSV from CMS, rerun the build notes in README.md, and republish <code>data/</code>. Do not rewrite ratings by hand.</p>
+</div></article>
+
+  <div id="site-footer"></div>
+  <script src="assets/app.js"></script>
+</body>
+</html>
