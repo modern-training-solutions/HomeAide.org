@@ -13,6 +13,10 @@ jobs:
       deployments: write
     steps:
       - uses: actions/checkout@v5
+      # wrangler-action probes with `npx --no-install`, which npm treats as an
+      # error when Wrangler is not already in node_modules. Install it first.
+      - name: Install Wrangler
+        run: npm install --no-fund --no-audit wrangler@4
       - uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
