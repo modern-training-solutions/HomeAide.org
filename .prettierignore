@@ -1,2 +1,5 @@
 # Markdown is formatted by markdownlint-cli2. Prettier's Markdown parser fights kramdown.
 *.md
+
+# Data files. Prettier would reprint every record.
+source/data/
