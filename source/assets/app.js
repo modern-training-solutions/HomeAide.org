@@ -1,14 +1,59 @@
 const STATE_NAMES = {
-  AL:"Alabama",AK:"Alaska",AZ:"Arizona",AR:"Arkansas",CA:"California",CO:"Colorado",
-  CT:"Connecticut",DC:"District of Columbia",DE:"Delaware",FL:"Florida",GA:"Georgia",
-  HI:"Hawaii",IA:"Iowa",ID:"Idaho",IL:"Illinois",IN:"Indiana",KS:"Kansas",KY:"Kentucky",
-  LA:"Louisiana",MA:"Massachusetts",MD:"Maryland",ME:"Maine",MI:"Michigan",MN:"Minnesota",
-  MO:"Missouri",MS:"Mississippi",MT:"Montana",NC:"North Carolina",ND:"North Dakota",
-  NE:"Nebraska",NH:"New Hampshire",NJ:"New Jersey",NM:"New Mexico",NV:"Nevada",
-  NY:"New York",OH:"Ohio",OK:"Oklahoma",OR:"Oregon",PA:"Pennsylvania",PR:"Puerto Rico",
-  RI:"Rhode Island",SC:"South Carolina",SD:"South Dakota",TN:"Tennessee",TX:"Texas",
-  UT:"Utah",VA:"Virginia",VI:"U.S. Virgin Islands",VT:"Vermont",WA:"Washington",
-  WI:"Wisconsin",WV:"West Virginia",WY:"Wyoming",GU:"Guam",MP:"Northern Mariana Islands"
+  AL: "Alabama",
+  AK: "Alaska",
+  AZ: "Arizona",
+  AR: "Arkansas",
+  CA: "California",
+  CO: "Colorado",
+  CT: "Connecticut",
+  DC: "District of Columbia",
+  DE: "Delaware",
+  FL: "Florida",
+  GA: "Georgia",
+  HI: "Hawaii",
+  IA: "Iowa",
+  ID: "Idaho",
+  IL: "Illinois",
+  IN: "Indiana",
+  KS: "Kansas",
+  KY: "Kentucky",
+  LA: "Louisiana",
+  MA: "Massachusetts",
+  MD: "Maryland",
+  ME: "Maine",
+  MI: "Michigan",
+  MN: "Minnesota",
+  MO: "Missouri",
+  MS: "Mississippi",
+  MT: "Montana",
+  NC: "North Carolina",
+  ND: "North Dakota",
+  NE: "Nebraska",
+  NH: "New Hampshire",
+  NJ: "New Jersey",
+  NM: "New Mexico",
+  NV: "Nevada",
+  NY: "New York",
+  OH: "Ohio",
+  OK: "Oklahoma",
+  OR: "Oregon",
+  PA: "Pennsylvania",
+  PR: "Puerto Rico",
+  RI: "Rhode Island",
+  SC: "South Carolina",
+  SD: "South Dakota",
+  TN: "Tennessee",
+  TX: "Texas",
+  UT: "Utah",
+  VA: "Virginia",
+  VI: "U.S. Virgin Islands",
+  VT: "Vermont",
+  WA: "Washington",
+  WI: "Wisconsin",
+  WV: "West Virginia",
+  WY: "Wyoming",
+  GU: "Guam",
+  MP: "Northern Mariana Islands",
 };
 
 function stars(n) {
@@ -20,22 +65,23 @@ function stars(n) {
   return `<span class="stars" title="${v} of 5">${s}</span> <strong>${v.toFixed(1)}</strong>`;
 }
 
-function qs(k) { return new URLSearchParams(location.search).get(k) || ""; }
+function qs(k) {
+  return new URLSearchParams(location.search).get(k) || "";
+}
 
 function headerHTML(active) {
-  const link = (href, label, key) =>
-    `<a href="${href}" ${active===key?'aria-current="page"':''}>${label}</a>`;
+  const link = (href, label, key) => `<a href="${href}" ${active === key ? 'aria-current="page"' : ""}>${label}</a>`;
   return `
   <header class="site-header">
     <div class="wrap header-inner">
       <a class="logo" href="INDEX"><span class="mark">H</span><span>HomeAide</span></a>
       <button class="menu-btn" aria-label="Menu" onclick="document.getElementById('nav').classList.toggle('open')">☰</button>
       <nav class="nav" id="nav">
-        ${link("search.html","Find an agency","search")}
-        ${link("browse.html","Browse states","browse")}
-        ${link("guides/index.html","Guides","guides")}
-        ${link("about.html","Mission","about")}
-        ${link("data.html","Our data","data")}
+        ${link("search.html", "Find an agency", "search")}
+        ${link("browse.html", "Browse states", "browse")}
+        ${link("guides/index.html", "Guides", "guides")}
+        ${link("about.html", "Mission", "about")}
+        ${link("data.html", "Our data", "data")}
         <a class="btn" href="search.html">Search Medicare agencies</a>
       </nav>
     </div>
@@ -75,10 +121,13 @@ function footerHTML() {
 function fixNavRoots() {
   const inGuides = location.pathname.includes("/guides/");
   const root = inGuides ? "../" : "";
-  document.querySelectorAll("header a, footer a").forEach(a => {
+  document.querySelectorAll("header a, footer a").forEach((a) => {
     const href = a.getAttribute("href");
     if (!href || href.startsWith("http") || href.startsWith("#")) return;
-    if (href === "INDEX") { a.setAttribute("href", root + "index.html"); return; }
+    if (href === "INDEX") {
+      a.setAttribute("href", root + "index.html");
+      return;
+    }
     if (!href.startsWith("../") && !href.startsWith("/")) a.setAttribute("href", root + href);
   });
 }
@@ -108,7 +157,7 @@ function matches(row, q, st, minStar, hhaOnly) {
   if (!q) return true;
   const hay = `${name} ${city} ${state} ${zip} ${ccn}`.toLowerCase();
   const terms = q.toLowerCase().trim().split(/\s+/);
-  return terms.every(t => hay.includes(t) || zip.startsWith(t));
+  return terms.every((t) => hay.includes(t) || zip.startsWith(t));
 }
 
 function resultCard(row) {
@@ -116,7 +165,7 @@ function resultCard(row) {
   const chips = [
     hha ? '<span class="chip">Home health aide</span>' : '<span class="chip off">No HHA listed</span>',
     nursing ? '<span class="chip">Nursing</span>' : "",
-    pt ? '<span class="chip">Physical therapy</span>' : ""
+    pt ? '<span class="chip">Physical therapy</span>' : "",
   ].join("");
   return `<a class="agency-row" href="agency.html?ccn=${encodeURIComponent(ccn)}">
     <article class="card">
@@ -142,12 +191,15 @@ async function runSearch() {
   const hhaOnly = document.getElementById("hhaOnly")?.checked || qs("hha") === "1";
   if (document.getElementById("q") && !document.getElementById("q").value) document.getElementById("q").value = q;
   if (document.getElementById("st") && st) document.getElementById("st").value = st;
-  const hits = cat.rows.filter(r => matches(r, q, st, minStar, hhaOnly));
+  const hits = cat.rows.filter((r) => matches(r, q, st, minStar, hhaOnly));
   document.getElementById("count").textContent =
     `${hits.length.toLocaleString()} agencies` + (q || st ? " matching your search" : " in the Medicare file");
   const show = hits.slice(0, 150);
-  out.innerHTML = show.map(resultCard).join("") +
-    (hits.length > 150 ? `<p class="muted">Showing the first 150 of ${hits.length.toLocaleString()}. Add a city, ZIP, or state to narrow results.</p>` : "");
+  out.innerHTML =
+    show.map(resultCard).join("") +
+    (hits.length > 150
+      ? `<p class="muted">Showing the first 150 of ${hits.length.toLocaleString()}. Add a city, ZIP, or state to narrow results.</p>`
+      : "");
 }
 
 async function fillStateSelect() {
@@ -155,51 +207,75 @@ async function fillStateSelect() {
   if (!sel) return;
   const base = location.pathname.includes("/guides/") ? "../" : "";
   const states = await (await fetch(base + "data/states.json")).json();
-  sel.innerHTML = `<option value="">All states</option>` + states.map(s =>
-    `<option value="${s.st}">${STATE_NAMES[s.st] || s.st} (${s.count})</option>`).join("");
+  sel.innerHTML =
+    `<option value="">All states</option>` +
+    states.map((s) => `<option value="${s.st}">${STATE_NAMES[s.st] || s.st} (${s.count})</option>`).join("");
 }
 
 async function renderBrowse() {
   const el = document.getElementById("browse");
   if (!el) return;
   const states = await (await fetch("data/states.json")).json();
-  el.innerHTML = states.map(s => `<a class="card" href="search.html?st=${s.st}">
+  el.innerHTML = states
+    .map(
+      (s) => `<a class="card" href="search.html?st=${s.st}">
     <div class="kicker">${s.st}</div>
     <h3>${STATE_NAMES[s.st] || s.st}</h3>
     <p>${s.count.toLocaleString()} agencies · ${s.hha.toLocaleString()} list home health aide services${s.avgStar ? ` · avg star ${s.avgStar}` : ""}</p>
-  </a>`).join("");
+  </a>`,
+    )
+    .join("");
 }
 
 function bar(label, val) {
-  if (val == null) return `<div class="measure"><span>${label}</span><span class="muted">n/a</span><div class="bar"></div></div>`;
+  if (val == null)
+    return `<div class="measure"><span>${label}</span><span class="muted">n/a</span><div class="bar"></div></div>`;
   const pct = Math.max(0, Math.min(100, Number(val)));
   return `<div class="measure"><span>${label}</span><span>${pct.toFixed(0)}%</span><div class="bar"><i style="width:${pct}%"></i></div></div>`;
 }
 
 function svcChips(svc) {
-  const map = {nursing:"Nursing", pt:"Physical therapy", ot:"Occupational therapy", speech:"Speech", msw:"Medical social work", hha:"Home health aide"};
-  return Object.entries(map).map(([k,l]) => `<span class="chip ${svc[k] ? "" : "off"}">${l}</span>`).join("");
+  const map = {
+    nursing: "Nursing",
+    pt: "Physical therapy",
+    ot: "Occupational therapy",
+    speech: "Speech",
+    msw: "Medical social work",
+    hha: "Home health aide",
+  };
+  return Object.entries(map)
+    .map(([k, l]) => `<span class="chip ${svc[k] ? "" : "off"}">${l}</span>`)
+    .join("");
 }
 
 async function renderAgency() {
   const el = document.getElementById("agency");
   if (!el) return;
   const ccn = qs("ccn");
-  if (!ccn) { el.innerHTML = "<p>Missing agency id.</p>"; return; }
+  if (!ccn) {
+    el.innerHTML = "<p>Missing agency id.</p>";
+    return;
+  }
   const cat = await loadCatalog();
-  const row = cat.rows.find(r => r[0] === ccn);
-  if (!row) { el.innerHTML = "<p>We could not find that CMS Certification Number in the July 2026 file.</p>"; return; }
+  const row = cat.rows.find((r) => r[0] === ccn);
+  if (!row) {
+    el.innerHTML = "<p>We could not find that CMS Certification Number in the July 2026 file.</p>";
+    return;
+  }
   const st = row[3];
   const list = await (await fetch(`data/states/${st}.json`)).json();
-  const p = list.find(x => x.ccn === ccn);
-  if (!p) { el.innerHTML = "<p>Profile data missing.</p>"; return; }
+  const p = list.find((x) => x.ccn === ccn);
+  if (!p) {
+    el.innerHTML = "<p>Profile data missing.</p>";
+    return;
+  }
   document.title = `${p.name} · HomeAide.org`;
-  const catLabel = (v) => v && v !== "-" ? v : "Not compared";
+  const catLabel = (v) => (v && v !== "-" ? v : "Not compared");
   el.innerHTML = `
     <p class="kicker"><a href="search.html?st=${p.st}">${STATE_NAMES[p.st] || p.st}</a> · Medicare-certified home health</p>
     <h1>${p.name}</h1>
     <p class="muted">${p.addr}<br>${p.city}, ${p.st} ${p.zip}<br>
-      ${p.phone ? `<a href="tel:${p.phone.replace(/[^\d]/g,"")}">${p.phone}</a>` : "Phone not listed"} · CCN ${p.ccn}</p>
+      ${p.phone ? `<a href="tel:${p.phone.replace(/[^\d]/g, "")}">${p.phone}</a>` : "Phone not listed"} · CCN ${p.ccn}</p>
     <p>${stars(p.star)} quality of patient care (CMS)</p>
     <p>${svcChips(p.svc)}</p>
     <p class="muted">Ownership: ${p.own || "Not listed"} · Certified ${p.cert || "n/a"}</p>
@@ -243,17 +319,21 @@ document.addEventListener("DOMContentLoaded", () => {
   if (page === "agency") renderAgency();
   if (page === "home") homeStats();
   const form = document.getElementById("search-form");
-  if (form) form.addEventListener("submit", (e) => {
-    if (page === "search") {
-      e.preventDefault();
-      const q = document.getElementById("q").value;
-      const st = document.getElementById("st")?.value || "";
-      history.replaceState(null, "", `search.html?q=${encodeURIComponent(q)}&st=${encodeURIComponent(st)}`);
-      runSearch();
-    }
-  });
-  ["st","minStar","hhaOnly"].forEach(id => {
+  if (form)
+    form.addEventListener("submit", (e) => {
+      if (page === "search") {
+        e.preventDefault();
+        const q = document.getElementById("q").value;
+        const st = document.getElementById("st")?.value || "";
+        history.replaceState(null, "", `search.html?q=${encodeURIComponent(q)}&st=${encodeURIComponent(st)}`);
+        runSearch();
+      }
+    });
+  ["st", "minStar", "hhaOnly"].forEach((id) => {
     const n = document.getElementById(id);
-    if (n) n.addEventListener("change", () => { if (page === "search") runSearch(); });
+    if (n)
+      n.addEventListener("change", () => {
+        if (page === "search") runSearch();
+      });
   });
 });
